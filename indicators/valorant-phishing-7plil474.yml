@@ -1,11 +1,9 @@
 title: Valorant Phishing Kit 7plil474
 description: |
-    Detects Valorant phishing sites using a DOM content.
-
-    These sites use Promocodes most common are "Tenz" "Kyedae" "Mrbeast" "Beast".
-    Usually spread on social media.
-    This version detects the login page usually at /login.
-
+    Detects a phishing kit targeting Valorant players. It is typically spread on 
+    social media platforms such as TikTok, often luring in gamers using popular 
+    figures such as Tenz, Kyedae and MrBeast.
+    
 references:
     - https://www.tiktok.com/search/video?q=mrbeast%20valorant
     - https://urlscan.io/result/ceb1f3d8-efed-40b3-85e4-6c9eecd182b7/
@@ -14,24 +12,19 @@ references:
 
 detection:
 
-    Title:
-        title|contains: 'Sign In'
+    requests:
+      requests|endswith|all: 
+         - '/login'
+         - 'logins.css'
+         - '/t/1.css?apiType=css&projectid=dce2cd3c-2b49-496c-8fe8-f7eedea7aa2b'
 
-    Evenodd:
-        dom|contains|all: 
-        - 'evenodd'
-        - 'd="M28.7331'
-
-    RealDomain:
-        hostname|endswith:
-            - .riotgames.com
-            - .playvalorant.com
-            - .leagueoflegends.com
-
-    AfterLogin:
-        html|contains: 'waiting list!'
-
-    condition: AfterLogin and Title and Evenodd and not RealDomain
+    jsVariables:
+      js|contains|all:
+        - 'makeid'
+        - 'rqdata_token'
+        - 'login_mfa'
+        
+    condition: requests and jsVariables
 
 tags:
     - kit
